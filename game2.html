@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>Mines Game</title>
+</head>
+<body>
+    <div class="nav">
+        <a href="index.html">Dice Game</a>
+        <a href="game2.html">Mines Game</a>
+    </div>
+    <h1>Mines Game</h1>
+    <div class="balance-box" id="balance-box">
+        <p>Balance: <span id="balance">1000</span> coins</p>
+    </div>
+    <div class="mines-game-container">
+        <div class="mines-settings">
+            <h3>Number of Mines</h3>
+            <select id="number-of-mines">
+                <option value="3">3</option>
+                <option value="5">5</option>
+                <option value="7">7</option>
+            </select>
+            <button id="start-game">Start Game</button>
+        </div>
+        <div class="mines-game-board" id="mines-game-board">
+            <!-- The game board elements will be created in JavaScript -->
+        </div>
+        <!-- Add risk management, history board, and other necessary components here -->
+    </div>
+    <script src="mines.js"></script>
+</body>
+</html>
