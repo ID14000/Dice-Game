@@ -62,6 +62,44 @@ h1 {
 .dice.roll {
     transform: rotate(720deg);
 }
+.mines-game-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.mines-settings {
+    margin-right: 30px;
+}
+
+.mines-game-board {
+    display: inline-block;
+    background-color: #333;
+    border: 2px solid #444;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+.mines-game-row {
+    display: flex;
+}
+
+.mines-game-cell {
+    width: 70px;
+    height: 70px;
+    background-color: #1e1e1e;
+    border: 1px solid #333;
+    box-sizing: border-box;
+    cursor: pointer;
+}
+
+.mines-game-cell[data-revealed="true"] {
+    background-color: #444;
+}
+
+.mines-game-cell[data-mine="true"] {
+    background-color: #F44336;
+}
 
 input {
     margin: 14px 0;
