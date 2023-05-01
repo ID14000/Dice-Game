@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>Dice Game</title>
+</head>
+<body>
+    <h1>Dice Game</h1>
+    <div class="balance-box" id="balance-box">
+        <p>Balance: <span id="balance">1000</span> coins</p>
+    </div>
+    <div class="dice-container">
+        <div class="dice" id="dice">-</div>
+    </div>
+    <label for="bet">Bet:</label>
+    <input type="number" id="bet" value="10" min="1">
+    <br>
+    <button onclick="betMin()">Bet Min</button>
+    <button onclick="allIn()">All In</button>
+    <br>
+    <label for="risk">Risk (1-99):</label>
+    <div class="risk-slider-container">
+        <input type="range" id="risk" value="50" min="1" max="99" step="1" oninput="updateRiskValue()">
+        <div class="risk-slider-scale">
+            <span>1</span>
+            <span>25</span>
+            <span>50</span>
+            <span>75</span>
+            <span>99</span>
+        </div>
+    </div>
+    <input type="number" class="risk-value" id="risk-value" value="50" readonly>
+    <br>
+    <button onclick="rollDice()">Roll the dice</button>
+    <p id="result"></p>
+    <div class="history-board">
+        <h2>History</h2>
+        <ul id="history-list"></ul>
+    </div>
+    <div class="confirmation-dialog" id="confirmation-dialog">
+        <div class="confirmation-dialog-content">
+            <p>You are about to bet your entire balance. This means you could lose everything. Are you sure you want to proceed?</p>
+            <button onclick="confirmAllIn()">Yes</button>
+            <button onclick="closeConfirmationDialog()">No</button>
+        </div>
+    </div>    
+    <script src="script.js"></script>
+</body>
+</html>
