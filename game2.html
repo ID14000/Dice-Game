@@ -3,33 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="mines.css">
     <title>Mines Game</title>
 </head>
-<link rel="stylesheet" href="mines.css">
 <body>
-    <div class="nav">
-        <a href="index.html">Dice Game</a>
-        <a href="game2.html">Mines Game</a>
+    <div class="navigation">
+        <button id="switch-to-dice-game">Dice Game</button>
+        <button id="switch-to-mines-game">Mines Game</button>
     </div>
     <h1>Mines Game</h1>
-    <div class="balance-box" id="balance-box">
-        <p>Balance: <span id="balance">1000</span> coins</p>
-    </div>
-    <div class="mines-game-container">
-        <div class="mines-settings">
-            <h3>Number of Mines</h3>
-            <select id="number-of-mines">
-                <option value="3">3</option>
-                <option value="5">5</option>
-                <option value="7">7</option>
-            </select>
-            <button id="start-game">Start Game</button>
+    <div class="mines-container">
+        <div class="mines-controls">
+            <label for="mines-count">Mines:</label>
+            <input type="number" id="mines-count" value="5" min="1" max="24">
+            <button id="start-game-button">Start game</button>
+            <button id="cash-out-button">Cash out</button>
+            <p>Cash out multiplier: <span id="cash-out-value">1.00</span></p>
+            <label for="bet">Bet:</label>
+            <input type="number" id="bet" value="1" min="0.01">
+            <p>Balance: <span id="balance">100</span></p>
         </div>
-        <div class="mines-game-board" id="mines-game-board">
-            <!-- The game board elements will be created in JavaScript -->
-        </div>
-        <!-- Add risk management, history board, and other necessary components here -->
+        <div class="mines-game-board" id="mines-game-board"></div>
     </div>
     <script src="mines.js"></script>
 </body>
