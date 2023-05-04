@@ -7,24 +7,42 @@
     <title>Mines Game</title>
 </head>
 <body>
-    <div class="navigation">
-        <button id="switch-to-dice-game">Dice Game</button>
-        <button id="switch-to-mines-game">Mines Game</button>
-    </div>
-    <h1>Mines Game</h1>
+    
     <div class="mines-container">
-        <div class="mines-controls">
-            <label for="mines-count">Mines:</label>
-            <input type="number" id="mines-count" value="5" min="1" max="24">
-            <button id="start-game-button">Start game</button>
-            <button id="cash-out-button">Cash out</button>
-            <p>Cash out multiplier: <span id="cash-out-value">1.00</span></p>
-            <label for="bet">Bet:</label>
-            <input type="number" id="bet" value="1" min="0.01">
-            <p>Balance: <span id="balance">100</span></p>
+        <div class="navigation">
+            <a href="index.html">Dice Game</a>
+            <a href="game2.html">Mines Game</a>
         </div>
-        <div class="mines-game-board" id="mines-game-board"></div>
+        <h1>Mines Game</h1>
+        <div class="settings-container">
+            <div class="settings">
+                <label for="mines-count">Mines:</label>
+                <input id="mines-count" type="number" min="1" max="24" value="3">
+            </div>
+            <div class="settings">
+                <label for="bet">Bet:</label>
+                <input id="bet" type="number" min="0.01" step="0.01" value="1">
+            </div>
+            <button id="start-game-button">Start Game</button>
+        </div>
+        <div id="mines-game-board" class="mines-game-board"></div>
+        <div class="mines-container">
+            <div class="message-container"></div>
+            <div class="mines-game-board" id="mines-game-board"></div>
+          </div>
+        <div class="cash-out-container">
+            <div class="cash-out-info">
+                <label for="cash-out-value">Multiplier:</label>
+                <span id="cash-out-value">1.00</span>
+            </div>
+            <button id="cash-out-button">Cash Out</button>
+        </div>
+        <div>
+            <label for="balance">Balance:</label>
+            <span id="balance">100.00</span>
+        </div>
     </div>
+    
     <script src="mines.js"></script>
 </body>
 </html>
