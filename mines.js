@@ -3,10 +3,16 @@ const startGameButton = document.getElementById('start-game-button');
 const minesCountInput = document.getElementById('mines-count');
 const cashOutButton = document.getElementById('cash-out-button');
 const cashOutValue = document.getElementById('cash-out-value');
+const betInput = document.getElementById('bet');
+const balanceDisplay = document.getElementById('balance');
 
 let board = [];
 let remainingCells;
 let cashOutMultiplier = 1;
+let balance = 100;
+let gameOver = false;
+
+
 
 function createBoard() {
     for (let i = 0; i < 5; i++) {
@@ -26,6 +32,7 @@ function createBoard() {
 }
 
 function startGame() {
+    gameOver = false;
     const minesCount = parseInt(minesCountInput.value);
     remainingCells = 25 - minesCount;
     cashOutMultiplier = 1;
@@ -37,7 +44,11 @@ function startGame() {
         cell.dataset.mine = 'false';
         cell.dataset.revealed = 'false';
         cell.style.backgroundColor = '#1e1e1e';
+        cell.textContent = ""; // Added: Clear the cell content (Bomb or Checkmark)
     });
+
+    // Reset board array
+    board = []; // Added: Reset the board array
 
     // Place mines randomly
     for (let i = 0; i < minesCount; i++) {
@@ -54,33 +65,65 @@ function startGame() {
         board[row][col].dataset.mine = 'true';
     }
 }
+const messageElement = document.createElement('div');
+messageElement.style.display = 'none';
+messageElement.style.fontSize = '16px';
+messageElement.style.marginTop = '10px';
+minesGameBoard.insertAdjacentElement('afterend', messageElement);
 
-function revealCell(cell) {
-    if (cell.dataset.revealed === 'true') {
-        return;
+function displayMessage(text, color) {
+    const messageContainer = document.querySelector('.message-container');
+    messageContainer.textContent = text;
+    messageContainer.style.color = color;
+    messageContainer.style.display = 'block';
+    setTimeout(() => {
+        messageContainer.style.display = 'none';
+    }, 3000);
+  }
+  
+  function revealCell(cell) {
+    if (cell.dataset.revealed === 'true' || gameOver) {
+      return;
     }
-
+  
     cell.dataset.revealed = 'true';
-    cell.style.backgroundColor = '#444';
+  cell.style.backgroundColor = '#444';
 
-    if (cell.dataset.mine === 'true') {
-        cell.style.backgroundColor = '#F44336';
-        alert('You hit a mine! Game over!');
-        startGame();
-    } else {
-        remainingCells--;
-        cashOutMultiplier += (1 / (25 - parseInt(minesCountInput.value))) * 100;
-        cashOutValue.textContent = cashOutMultiplier.toFixed(2);
+  if (cell.dataset.mine === 'true') {
+    cell.textContent = '💣';
+    displayMessage('You hit a mine! Game over!', '#F44336');
+    balance -= parseFloat(betInput.value);
+    balanceDisplay.textContent = balance.toFixed(2);
+    revealAllMines();
+    gameOver = true;
+  } else {
+    remainingCells--;
+    cashOutMultiplier = 1 + (Math.pow((25 - parseInt(minesCountInput.value)), 2) - Math.pow(remainingCells, 2)) / Math.pow((25 - parseInt(minesCountInput.value)), 2) * 100;
+    cashOutValue.textContent = cashOutMultiplier.toFixed(2);
 
-        if (remainingCells === 0) {
-            alert('You won! All safe cells revealed.');
-            startGame();
-        }
+    if (remainingCells === 0) {
+      displayMessage('You won! All safe cells revealed.', '#4CAF50');
+      gameOver = true;
     }
+  }
 }
 
+function revealAllMines() {
+    board.forEach(row => {
+      row.forEach(cell => {
+        if (cell.dataset.mine === 'true' && cell.dataset.revealed !== 'true') {
+          cell.dataset.revealed = 'true';
+          cell.style.backgroundColor = '#444';
+          cell.textContent = '💣';
+        }
+      });
+    });
+  }
+
 function cashOut() {
-    // Do something with cashOutMultiplier, for example, add it to the user's balance
+    const cashOutAmount = parseFloat(betInput.value) * cashOutMultiplier;
+    balance += cashOutAmount;
+    balanceDisplay.textContent = balance.toFixed(2);
     alert('You cashed out with a multiplier of ' + cashOutMultiplier.toFixed(2));
     startGame();
 }
