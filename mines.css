@@ -78,6 +78,10 @@ body {
     background-color: #F44336;
 }
 
+.mines-game-cell[data-revealed="true"]:after {
+  position: absolute;
+}
+
 .mines-game-cell[data-mine="true"][data-revealed="true"]:after {
     content: "💣";
     color: #333;
