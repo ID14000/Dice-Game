@@ -87,26 +87,29 @@ function displayMessage(text, color) {
     }
   
     cell.dataset.revealed = 'true';
-  cell.style.backgroundColor = '#444';
-
-  if (cell.dataset.mine === 'true') {
-    cell.textContent = '💣';
-    displayMessage('You hit a mine! Game over!', '#F44336');
-    balance -= parseFloat(betInput.value);
-    balanceDisplay.textContent = balance.toFixed(2);
-    revealAllMines();
-    gameOver = true;
-  } else {
-    remainingCells--;
-    cashOutMultiplier = 1 + (Math.pow((25 - parseInt(minesCountInput.value)), 2) - Math.pow(remainingCells, 2)) / Math.pow((25 - parseInt(minesCountInput.value)), 2) * 100;
-    cashOutValue.textContent = cashOutMultiplier.toFixed(2);
-
-    if (remainingCells === 0) {
-      displayMessage('You won! All safe cells revealed.', '#4CAF50');
+    cell.style.backgroundColor = '#444';
+  
+    if (cell.dataset.mine === 'true') {
+      cell.textContent = '💣';
+      displayMessage('You hit a mine! Game over!', '#F44336');
+      balance -= parseFloat(betInput.value);
+      balanceDisplay.textContent = balance.toFixed(2);
+      revealAllMines();
       gameOver = true;
+  
+      cashOutMultiplier = 0;
+      cashOutValue.textContent = cashOutMultiplier.toFixed(2);
+    } else {
+      remainingCells--;
+      cashOutMultiplier = 1 + (Math.pow((25 - parseInt(minesCountInput.value)), 2) - Math.pow(remainingCells, 2)) / Math.pow((25 - parseInt(minesCountInput.value)), 2) * 100;
+      cashOutValue.textContent = cashOutMultiplier.toFixed(2);
+  
+      if (remainingCells === 0) {
+        displayMessage('You won! All safe cells revealed.', '#4CAF50');
+        gameOver = true;
+      }
     }
   }
-}
 
 function revealAllMines() {
     board.forEach(row => {
