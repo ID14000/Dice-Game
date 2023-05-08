@@ -33,23 +33,23 @@ body {
 .settings {
     display: flex;
     align-items: center;
-    margin-bottom: 10px;
+    margin-bottom: 25px;
 }
 
 .mines-game-board {
     display: flex;
     flex-direction: column;
-    gap: 2px;
+    gap: 5px;
 }
 
 .mines-game-row {
     display: flex;
-    gap: 2px;
+    gap: 5px;
 }
 
 .mines-game-cell {
-    width: 50px;
-    height: 50px;
+    width: 90px;
+    height: 90px;
     background-color: #1e1e1e;
     display: flex;
     align-items: center;
@@ -57,6 +57,11 @@ body {
     cursor: pointer;
     position: relative;
     overflow: hidden;
+    transition: background-color 0.3s;
+}
+
+.mines-game-cell:hover {
+    background-color: #444;
 }
 
 .mines-game-cell:before {
@@ -83,11 +88,13 @@ body {
 }
 
 .mines-game-cell[data-mine="true"][data-revealed="true"]:after {
+    font-size: 30px;
     content: "💣";
     color: #333;
 }
 
 .mines-game-cell[data-mine="false"][data-revealed="true"]:after {
+    font-size: 30px;
     content: "✓";
     color: #4CAF50;
 }
@@ -104,11 +111,26 @@ body {
     align-items: center;
     margin-bottom: 10px;
 }
+.message-box {
+    display: none;
+    position: fixed;
+    top: 36%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #333;
+    padding: 20px;
+    border: 2px solid #fff;
+    border-radius: 5px;
+    text-align: center;
+}
 
+.message-box p {
+    margin-bottom: 20px;
+}
 button {
     background-color: #4CAF50;
     color: #fff;
-    font-size: 14px;
+    font-size: 18px;
     padding: 5px 10px;
     border: none;
     cursor: pointer;
@@ -116,5 +138,9 @@ button {
 }
 
 button:hover {
-    background-color: #45a049;
+    background-color: #337c37;
+}
+button:disabled {
+    background-color: #2e7d32;
+    cursor: not-allowed;
 }
