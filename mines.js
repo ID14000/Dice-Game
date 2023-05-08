@@ -32,12 +32,14 @@ function createBoard() {
 }
 
 function startGame() {
+
     gameOver = false;
     const minesCount = parseInt(minesCountInput.value);
     remainingCells = 25 - minesCount;
     cashOutMultiplier = 1;
     cashOutValue.textContent = cashOutMultiplier;
-
+    cashOutButton.disabled = true;
+    
     // Clear mines and reset data attributes
     const cells = document.querySelectorAll('.mines-game-cell');
     cells.forEach(cell => {
@@ -80,7 +82,26 @@ function displayMessage(text, color) {
         messageContainer.style.display = 'none';
     }, 3000);
   }
-  
+  function calculateMultiplier(totalMines, remainingCells) {
+    if (remainingCells === 0) return 0;
+
+    const totalSafeCells = 25 - totalMines;
+    const openedCells = totalSafeCells - remainingCells;
+
+    const maxMultiplier = totalMines === 24 ? 25 : 1 + totalSafeCells / totalMines;
+    const baseMultiplier = 1 + (0.15 * totalMines) / 25;
+    const riskFactor = (maxMultiplier - baseMultiplier) / (Math.pow(totalSafeCells - 1, 2));
+
+    return baseMultiplier + (riskFactor * Math.pow(openedCells, 2));
+}
+function updateCashOutMultiplier() {
+  const totalMines = parseInt(minesCountInput.value);
+  cashOutMultiplier = calculateMultiplier(totalMines, remainingCells);
+  cashOutValue.textContent = cashOutMultiplier.toFixed(2);
+
+  // Enable/disable the cash out button
+  cashOutButton.disabled = cashOutMultiplier <= 1;
+}
   function revealCell(cell) {
     if (cell.dataset.revealed === 'true' || gameOver) {
       return;
@@ -88,7 +109,13 @@ function displayMessage(text, color) {
   
     cell.dataset.revealed = 'true';
     cell.style.backgroundColor = '#444';
-  
+    if (remainingCells === 0) {
+        const cashOutAmount = parseFloat(betInput.value) * cashOutMultiplier;
+        balance += cashOutAmount;
+        balanceDisplay.textContent = balance.toFixed(2);
+        displayMessage(`You won! All safe cells revealed. Cash out amount: ${cashOutAmount.toFixed(2)}`, '#4CAF50');
+        gameOver = true;
+    }
     if (cell.dataset.mine === 'true') {
       cell.textContent = '💣';
       displayMessage('You hit a mine! Game over!', '#F44336');
@@ -101,12 +128,23 @@ function displayMessage(text, color) {
       cashOutValue.textContent = cashOutMultiplier.toFixed(2);
     } else {
       remainingCells--;
-      cashOutMultiplier = 1 + (Math.pow((25 - parseInt(minesCountInput.value)), 2) - Math.pow(remainingCells, 2)) / Math.pow((25 - parseInt(minesCountInput.value)), 2) * 100;
-      cashOutValue.textContent = cashOutMultiplier.toFixed(2);
-  
+
+        updateCashOutMultiplier();
+      const totalMines = parseInt(minesCountInput.value);
+        cashOutMultiplier = calculateMultiplier(totalMines, remainingCells);
+        cashOutValue.textContent = cashOutMultiplier.toFixed(2);
+
+        // Enable/disable the cash out button
+        cashOutButton.disabled = cashOutMultiplier <= 1;
       if (remainingCells === 0) {
-        displayMessage('You won! All safe cells revealed.', '#4CAF50');
-        gameOver = true;
+        const cashOutAmount = parseFloat(betInput.value) * cashOutMultiplier;
+        balance += cashOutAmount;
+        balanceDisplay.textContent = balance.toFixed(2);
+        displayMessage(`You won! All safe cells revealed. Cash out amount: ${cashOutAmount.toFixed(2)}`, '#4CAF50');
+
+        setTimeout(() => {
+            startGame();
+        }, 3000);
       }
     }
   }
@@ -123,12 +161,25 @@ function revealAllMines() {
     });
   }
 
-function cashOut() {
+  function cashOut() {
+    revealAllMines(); // Reveal all mines when cashing out
     const cashOutAmount = parseFloat(betInput.value) * cashOutMultiplier;
     balance += cashOutAmount;
+    if (balance < 0) {
+        balance = 0;
+    }
     balanceDisplay.textContent = balance.toFixed(2);
-    alert('You cashed out with a multiplier of ' + cashOutMultiplier.toFixed(2));
-    startGame();
+
+    const messageBox = document.getElementById('message-box');
+    const messageText = document.getElementById('message-text');
+    const messageOkButton = document.getElementById('message-ok-button');
+
+    messageText.textContent = 'You cashed out with a multiplier of ' + cashOutMultiplier.toFixed(2);
+    messageBox.style.display = 'block';
+    messageOkButton.onclick = () => {
+        messageBox.style.display = 'none';
+        startGame();
+    };
 }
 
 createBoard();
