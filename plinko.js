@@ -1,86 +1,68 @@
-const engine = Matter.Engine.create();
-const render = Matter.Render.create({
-    element: document.querySelector(".plinko-container"),
+const { Engine, Render, Runner, World, Bodies, Body, Events } = Matter;
+
+const canvas = document.getElementById('plinkoCanvas');
+const engine = Engine.create();
+const world = engine.world;
+const render = Render.create({
+    canvas: canvas,
     engine: engine,
     options: {
-        width: 800,
-        height: 600,
         wireframes: false,
         background: '#333'
     }
 });
 
-Matter.Engine.run(engine);
-Matter.Render.run(render);
+Engine.run(engine);
+Render.run(render);
 
-const { Bodies, Body, World, Events } = Matter;
+const pegRadius = 10;
+const pegSpacing = 70;
+const numPegRows = 10;
+const numPots = 9;
+const potWidth = pegSpacing;
+const potHeight = 100;
+const ballRadius = pegRadius;
 
-const ground = Bodies.rectangle(400, 610, 810, 60, { isStatic: true });
-const leftWall = Bodies.rectangle(-10, 300, 60, 610, { isStatic: true });
-const rightWall = Bodies.rectangle(810, 300, 60, 610, { isStatic: true });
-const ceiling = Bodies.rectangle(400, -10, 810, 60, { isStatic: true });
+// Create pegs
+for (let row = 0; row < numPegRows; row++) {
+    const isEvenRow = row % 2 === 0;
+    const numPegsInRow = isEvenRow ? numPots : numPots - 1;
+    const xOffset = isEvenRow ? pegSpacing / 2 : 0;
 
-const pinRadius = 5;
-const numRows = 9;
-const numCols = 9;
-const xOffset = 100;
-const yOffset = 100;
-const xSpacing = 70;
-const ySpacing = 70;
-const pins = [];
-
-for (let row = 0; row < numRows; row++) {
-    for (let col = 0; col < numCols; col++) {
-        if (row % 2 === 0 || col < numCols - 1) {
-            const x = xOffset + col * xSpacing + (row % 2 === 0 ? xSpacing / 2 : 0);
-            const y = yOffset + row * ySpacing;
-            pins.push(Bodies.circle(x, y, pinRadius, { isStatic: true }));
-        }
-    }
-}
-
-const potWidth = 60;
-const potHeight = 60;
-const numPots = 8;
-const potSpacing = 70;
-const pots = [];
-
-for (let i = 0; i < numPots; i++) {
-    const x = xOffset + i * potSpacing + potWidth / 2;
-    const y = 500 + yOffset + potHeight / 2;
-    const pot = Bodies.rectangle(x, y, potWidth, potHeight, { isStatic: true, label: `pot${i}` });
-    pots.push(pot);
-}
-
-World.add(engine.world, [ground, leftWall, rightWall, ceiling, ...pins, ...pots]);
-
-let ball = null;
-
-function spawnBall() {
-    if (ball) {
-        World.remove(engine.world, ball);
-    }
-
-    const ballRadius = 10;
-    const randomX = xOffset + Math.random() * (numCols * xSpacing - ballRadius * 2);
-    ball = Bodies.circle(randomX, 50, ballRadius, { restitution: 0.5 });
-
-    World.add(engine.world, ball);
-}
-
-spawnBall();
-
-Events.on(engine, "collisionStart", (event) => {
-    const { pairs } = event;
-
-    pairs.forEach(({ bodyA, bodyB }) => {
-        if (bodyA === ball || bodyB === ball) {
-            const pot = bodyA !== ball ? bodyA : bodyB;
-
-            if (pot.label && pot.label.startsWith("pot")) {
-                console.log("Ball entered pot:", pot.label);
-                spawnBall();
+    for (let i = 0; i < numPegsInRow; i++) {
+        const x = xOffset + i * pegSpacing;
+        const y = pegSpacing / 2 + row * pegSpacing;
+        const peg = Bodies.circle(x, y, pegRadius, {
+            isStatic: true,
+            render: {
+                fillStyle: '#9091dd'
             }
+        });
+        World.add(world, peg);
+    }
+}
+
+// Create pots
+for (let i = 0; i < numPots; i++) {
+    const x = i * potWidth + potWidth / 2;
+    const y = canvas.height - potHeight / 2;
+    const pot = Bodies.rectangle(x, y, potWidth, potHeight, {
+        isStatic: true,
+        render: {
+            fillStyle: '#444'
         }
     });
+    World.add(world, pot);
+}
+
+const dropBallButton = document.getElementById('dropBall');
+dropBallButton.addEventListener('click', () => {
+    const randomX = Math.random() * canvas.width;
+    const ball = Bodies.circle(randomX, ballRadius, ballRadius, {
+        restitution: 0.5,
+        render: {
+            fillStyle: '#fff'
+        }
+    });
+    World.add(world, ball);
 });
