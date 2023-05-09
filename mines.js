@@ -5,6 +5,10 @@ const cashOutButton = document.getElementById('cash-out-button');
 const cashOutValue = document.getElementById('cash-out-value');
 const betInput = document.getElementById('bet');
 const balanceDisplay = document.getElementById('balance');
+const allInButton = document.getElementById('all-in-button'); // Add this line
+const confirmationDialog = document.getElementById('confirmation-dialog');
+const confirmAllInButton = document.getElementById('confirm-all-in');
+const cancelAllInButton = document.getElementById('cancel-all-in');
 
 let board = [];
 let remainingCells;
@@ -13,7 +17,26 @@ let balance = 100;
 let gameOver = false;
 
 
+function showAllInConfirmation() {
+    confirmationDialog.style.display = 'flex';
+}
 
+function hideAllInConfirmation() {
+    confirmationDialog.style.display = 'none';
+}
+
+function allIn() {
+    showAllInConfirmation();
+}
+
+confirmAllInButton.addEventListener('click', () => {
+    betInput.value = balance.toFixed(2);
+    hideAllInConfirmation();
+});
+
+cancelAllInButton.addEventListener('click', () => {
+    hideAllInConfirmation();
+});
 function createBoard() {
     for (let i = 0; i < 5; i++) {
         const row = document.createElement('div');
@@ -32,7 +55,11 @@ function createBoard() {
 }
 
 function startGame() {
-
+    const betValue = parseFloat(betInput.value);
+    if (balance < betValue || balance === 0) {
+        displayMessage("Insufficient balance to start a new game", "#F44336");
+        return;
+    }
     gameOver = false;
     const minesCount = parseInt(minesCountInput.value);
     remainingCells = 25 - minesCount;
@@ -190,6 +217,19 @@ minesGameBoard.addEventListener('click', (event) => {
         revealCell(event.target);
     }
 });
+betInput.addEventListener("input", () => {
+    const betValue = parseFloat(betInput.value);
+    startGameButton.disabled = balance < betValue || balance === 0;
+});
 
+// Add an event listener to update the bet input's max value based on balance
+balanceDisplay.addEventListener("DOMSubtreeModified", () => {
+    balance = parseFloat(balanceDisplay.textContent);
+    betInput.max = balance;
+});
+
+// Disable the "Start Game" button initially if balance is smaller than the bet or balance is 0
+startGameButton.disabled = balance < parseFloat(betInput.value) || balance === 0;
 startGameButton.addEventListener('click', startGame);
 cashOutButton.addEventListener('click', cashOut);
+allInButton.addEventListener('click', allIn);
