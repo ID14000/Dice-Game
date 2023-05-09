@@ -7,7 +7,7 @@
     <title>Mines Game</title>
 </head>
 <body>
-    
+   
     <div class="mines-container">
         <div class="navigation">
             <a href="index.html">Dice Game</a>
@@ -16,15 +16,19 @@
         <h1>Mines Game</h1>
         <div class="settings-container">
             <div class="settings">
+                
                 <label for="mines-count">Mines:</label>
                 <input id="mines-count" type="number" min="1" max="24" value="3">
             </div>
             <div class="settings">
                 <label for="bet">Bet:</label>
                 <input id="bet" type="number" min="1" step="1" value="10">
+                <button id="all-in-button">All In</button> <!-- Add this line -->
             </div>
+            
             <button id="start-game-button">Start Game</button>
         </div>
+        
         <div id="mines-game-board" class="mines-game-board"></div>
         <div class="mines-container">
             <div class="message-container"></div>
@@ -46,7 +50,15 @@
             <span id="balance">100.00</span>
         </div>
     </div>
-    
+    <div id="confirmation-dialog" class="confirmation-dialog">
+        <div class="dialog-content">
+            <p>You are about to wager your entire balance. Are you sure you want to proceed?</p>
+            <div class="dialog-buttons">
+                <button id="confirm-all-in">Yes</button>
+                <button id="cancel-all-in">Cancel</button>
+            </div>
+        </div>
+    </div>
     <script src="mines.js"></script>
 </body>
 </html>
