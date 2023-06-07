@@ -73,11 +73,11 @@ function startGame() {
         cell.dataset.mine = 'false';
         cell.dataset.revealed = 'false';
         cell.style.backgroundColor = '#1e1e1e';
-        cell.textContent = ""; // Added: Clear the cell content (Bomb or Checkmark)
+        cell.textContent = ""; //Clear the cell content
     });
 
     // Reset board array
-    board = []; // Added: Reset the board array
+    board = []; //Reset the board array
 
     // Place mines randomly
     for (let i = 0; i < minesCount; i++) {
